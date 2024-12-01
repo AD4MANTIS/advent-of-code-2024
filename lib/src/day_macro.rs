@@ -55,9 +55,9 @@ macro_rules! day {
 macro_rules! day_main {
     ($day: literal, $part: expr) => {
         fn main() {
-            let _timer = lib::PrintTimer::new(&("day-".to_owned() + stringify!($day)));
-
             let input = include_str!("./input.txt");
+
+            let _timer = lib::PrintTimer::new(&("day-".to_owned() + stringify!($day)));
             let output = $part(input);
             dbg!(output);
         }

@@ -7,5 +7,4 @@ edition = "2021"
 
 [dependencies]
 lib = { path = "../lib/" }
-thiserror = { workspace = true }
-
+thiserror.workspace = true
