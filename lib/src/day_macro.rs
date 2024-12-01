@@ -4,7 +4,7 @@ Generates a main function that measures the duration it takes to get the answer,
 Also generates a 1-n test with this format, separated by `,`:
 `(test_name ([raw("test data")] | [("./input-file.txt")]) => expected_result)`
 For the following `test_name`s the following default `input-file` is assumed, otherwise you have to specify it:
-```
+```md
 | test_name | input_file          |
 |-----------|---------------------|
 | test      | "test-input.txt"    |
