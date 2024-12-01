@@ -5,9 +5,7 @@
 			"type": "cargo",
 			"command": "build",
 			"args": [
-				"--workspace",
-				"--exclude",
-				"day-template"
+				"--workspace"
 			],
 			"problemMatcher": [
 				"$rustc"
@@ -20,8 +18,6 @@
 			"command": "test",
 			"args": [
 				"--workspace",
-				"--exclude",
-				"day-template",
 				"--release",
 				"--no-fail-fast"
 			],

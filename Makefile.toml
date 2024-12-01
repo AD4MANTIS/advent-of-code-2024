@@ -1,0 +1,4 @@
+[tasks.test-all]
+command = "cargo"
+args = ["test", "--workspace"]
+workspace = false
