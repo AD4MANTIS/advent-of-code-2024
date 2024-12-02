@@ -1,3 +1,5 @@
+use lib::ToVec;
+
 lib::day!(02, part2, example => 4, test raw("9 1 2 3") => 1, test2 raw("1 99 2 3 4") => 1, answer => 692);
 
 // The levels are either all increasing or all decreasing.
@@ -6,15 +8,21 @@ lib::day!(02, part2, example => 4, test raw("9 1 2 3") => 1, test2 raw("1 99 2 3
 fn part2(input: &str) -> usize {
     input
         .lines()
-        .filter(|line| test_line::<0>(line) || test_line::<1>(line) || test_line::<999999>(line))
+        .filter(|line| {
+            let line = line
+                .split_whitespace()
+                .flat_map(|level| level.parse::<usize>().ok())
+                .enumerate()
+                .to_vec();
+
+            test_line::<0>(&line) || test_line::<1>(&line) || test_line::<999999>(&line)
+        })
         .count()
 }
 
-fn test_line<const SKIP: usize>(line: &str) -> bool {
+fn test_line<const SKIP: usize>(line: &[(usize, usize)]) -> bool {
     let mut line = line
-        .split_whitespace()
-        .flat_map(|level| level.parse::<usize>().ok())
-        .enumerate()
+        .iter()
         .filter(|level| level.0 != SKIP)
         .map(|level| level.1)
         .peekable();
