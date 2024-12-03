@@ -1,4 +1,4 @@
-lib::day!(00, part1, example => 161, answer => 159892596);
+lib::day!(03, part1, example => 161, answer => 159892596);
 
 fn part1(input: &str) -> usize {
     input
