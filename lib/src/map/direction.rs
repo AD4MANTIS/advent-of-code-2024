@@ -17,4 +17,17 @@ impl Direction {
             Self::Bottom => Offset::y(1),
         }
     }
+
+    pub fn all_directions_with_diagonals() -> [Offset; 8] {
+        [
+            Direction::Left.to_offset(),
+            Direction::Left.to_offset() + Direction::Top.to_offset(),
+            Direction::Top.to_offset(),
+            Direction::Top.to_offset() + Direction::Right.to_offset(),
+            Direction::Right.to_offset(),
+            Direction::Right.to_offset() + Direction::Bottom.to_offset(),
+            Direction::Bottom.to_offset(),
+            Direction::Bottom.to_offset() + Direction::Left.to_offset(),
+        ]
+    }
 }
