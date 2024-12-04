@@ -6,7 +6,7 @@ members = ["day-*"]
 
 [workspace.lints.clippy]
 enum_glob_use = "forbid"
-pedantic = "warn"
+pedantic = "forbid"
 
 [workspace.dependencies]
 lib = { path = "lib" }
