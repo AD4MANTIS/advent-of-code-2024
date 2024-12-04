@@ -84,17 +84,7 @@ impl<T: Clone> Map<T> {
     }
 
     pub fn all_pos(&self) -> Vec<Pos> {
-        let mut all_pos = Vec::with_capacity(
-            self.rows.len() * self.rows.first().map(|row| row.len()).unwrap_or(0),
-        );
-
-        for row in self.rows.iter().enumerate() {
-            for col in 0..row.1.len() {
-                all_pos.push(Pos { x: col, y: row.0 })
-            }
-        }
-
-        all_pos
+        self.all_pos_iter().collect()
     }
 
     pub const fn all_pos_iter(&self) -> AllPosIter<T> {
@@ -104,7 +94,7 @@ impl<T: Clone> Map<T> {
 
 pub struct AllPosIter<'a, T>(&'a Map<T>, Option<Pos>);
 
-impl<'a, T> Iterator for AllPosIter<'a, T> {
+impl<T> Iterator for AllPosIter<'_, T> {
     type Item = Pos;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -125,12 +115,19 @@ impl<'a, T> Iterator for AllPosIter<'a, T> {
 
         self.1.clone()
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        (
+            self.0.width() - self.1.as_ref().map(|pos| pos.x).unwrap_or_default() - 1,
+            Some(self.0.width() * self.0.height()),
+        )
+    }
 }
 
 pub struct ColumnIter<'a, T>(&'a Map<T>, Pos);
 pub struct ColumnsIter<'a, T>(&'a Map<T>, usize);
 
-impl<'a, T: Copy> Iterator for ColumnIter<'a, T> {
+impl<T: Copy> Iterator for ColumnIter<'_, T> {
     type Item = T;
 
     fn next(&mut self) -> Option<Self::Item> {

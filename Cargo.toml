@@ -4,6 +4,10 @@ resolver = "2"
 package.authors = ["AD4MANTIS"]
 members = ["day-*"]
 
+[workspace.lints.clippy]
+enum_glob_use = "forbid"
+pedantic = "warn"
+
 [workspace.dependencies]
 lib = { path = "lib" }
 thiserror = "2.0.3"
