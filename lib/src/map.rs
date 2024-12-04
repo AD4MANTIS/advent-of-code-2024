@@ -2,6 +2,6 @@ pub mod direction;
 pub mod flat_map;
 mod map;
 pub mod offset;
-pub mod pos;
+mod pos;
 
 pub mod prelude;
