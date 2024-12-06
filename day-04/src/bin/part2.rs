@@ -1,4 +1,4 @@
-use lib::map::{
+use lib::maps::{
     offset::Offset,
     prelude::{Map, Pos},
 };

@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use lib::map::prelude::{Direction, Map, Pos};
+use lib::maps::prelude::{Direction, Map, Pos};
 
 lib::day!(06, part1, example => 41, answer => 5312);
 

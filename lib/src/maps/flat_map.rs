@@ -72,7 +72,7 @@ impl IndexMut<&Pos> for FlatMap {
 
 #[cfg(test)]
 mod flat_map_tests {
-    use crate::map::map::get_test_map;
+    use crate::maps::map::get_test_map;
 
     use super::*;
 

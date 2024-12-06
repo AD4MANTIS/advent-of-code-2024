@@ -27,6 +27,7 @@ fn part1(input: &str) -> usize {
         .sum()
 }
 
+#[allow(dead_code)]
 fn part1_2(input: &str) -> usize {
     input
         .lines()

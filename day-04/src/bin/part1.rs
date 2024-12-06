@@ -1,5 +1,5 @@
 use lib::{
-    map::prelude::{Direction, Map},
+    maps::prelude::{Direction, Map},
     ToVec,
 };
 
