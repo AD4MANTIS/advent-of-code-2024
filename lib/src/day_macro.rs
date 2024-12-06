@@ -54,12 +54,9 @@ macro_rules! day {
 #[macro_export]
 macro_rules! day_main {
     ($day: literal, $part: expr) => {
-        fn main() {
-            let input = include_str!("./input.txt");
-
-            let _timer = lib::PrintTimer::new(&("day-".to_owned() + stringify!($day)));
+        pub fn main() {
+            let input = $crate::get_input_file!(answer);
             let output = $part(input);
-            dbg!(output);
         }
     };
 }
@@ -79,7 +76,9 @@ macro_rules! day_test {
                 $(
                     #[test]
                     fn [< day_ $day _ $name _works >]() {
-                        let result = $part($crate::get_test_file!($name $($raw)?$( $test_file)?));
+                        let _timer = lib::PrintTimer::new("");
+
+                        let result = $part($crate::get_input_file!($name $($raw)?$( $test_file)?));
                         assert_eq!(result, $result);
                     }
                 )+
@@ -89,7 +88,7 @@ macro_rules! day_test {
 }
 
 #[macro_export]
-macro_rules! get_test_file {
+macro_rules! get_input_file {
     (test) => {
         include_str!("test-input.txt")
     };

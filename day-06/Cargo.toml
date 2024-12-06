@@ -11,3 +11,10 @@ workspace = true
 [dependencies]
 lib = { path = "../lib/" }
 thiserror.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
+
+[[bench]]
+name = "benchmark"
+harness = false

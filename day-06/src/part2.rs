@@ -2,17 +2,18 @@ use std::collections::HashSet;
 
 use lib::maps::prelude::{Direction, Map, Pos};
 
-lib::day!(06, part1, example => 41, answer => 5312);
+lib::day!(06, part2, example => 6, answer => 0);
 
 const GUARD: char = '^';
 const OBSTACLE: char = '#';
 
+#[derive(PartialEq, Eq, PartialOrd, Ord, Hash)]
 struct Guard {
     current_position: Pos,
     direction: Direction,
 }
 
-fn part1(input: &str) -> usize {
+fn part2(input: &str) -> usize {
     let map = Map::from(input);
     let mut guard = Guard {
         current_position: find_start_pos(&map).unwrap(),

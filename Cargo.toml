@@ -15,6 +15,7 @@ priority = -1
 lib = { path = "lib" }
 thiserror = "2.0.3"
 itertools = "0.13.0"
+criterion = { version = "0.5", features = ["html_reports"] }
 
 [profile.release-with-symbols]
 inherits = "release"
