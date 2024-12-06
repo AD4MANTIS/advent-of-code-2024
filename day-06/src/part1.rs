@@ -18,14 +18,13 @@ fn part1(input: &str) -> usize {
         current_position: find_start_pos(&map).unwrap(),
         direction: Direction::Top,
     };
-    let mut visited_pos = HashSet::new();
-    visited_pos.insert(guard.current_position.clone());
+    let mut visited_pos = Vec::new();
+    visited_pos.push(guard.current_position.clone());
 
     loop {
-        let next_pos = guard
-            .current_position
-            .try_add(&guard.direction.to_offset())
-            .unwrap();
+        let Some(next_pos) = guard.current_position.try_add(&guard.direction.to_offset()) else {
+            break;
+        };
         let Some(place) = map.get(&next_pos) else {
             // Outside of Map
             break;
@@ -34,12 +33,12 @@ fn part1(input: &str) -> usize {
         if *place == OBSTACLE {
             guard.direction = guard.direction.turn_right();
         } else {
-            visited_pos.insert(next_pos.clone());
+            visited_pos.push(next_pos.clone());
             guard.current_position = next_pos;
         }
     }
 
-    visited_pos.len()
+    visited_pos.into_iter().collect::<HashSet<_>>().len()
 }
 
 fn find_start_pos(map: &Map) -> Option<Pos> {

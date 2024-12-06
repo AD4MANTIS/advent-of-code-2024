@@ -10,4 +10,3 @@ workspace = true
 
 [dependencies]
 lib = { path = "../lib/" }
-thiserror.workspace = true

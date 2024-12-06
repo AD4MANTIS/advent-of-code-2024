@@ -13,8 +13,9 @@ priority = -1
 
 [workspace.dependencies]
 lib = { path = "lib" }
-thiserror = "2.0.3"
+thiserror = "2.0.4"
 itertools = "0.13.0"
+rayon = "1.10"
 criterion = { version = "0.5", features = ["html_reports"] }
 
 [profile.release-with-symbols]
