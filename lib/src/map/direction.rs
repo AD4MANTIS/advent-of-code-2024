@@ -30,4 +30,22 @@ impl Direction {
             Direction::Bottom.to_offset() + Direction::Left.to_offset(),
         ]
     }
+
+    pub const fn turn_right(self) -> Self {
+        match self {
+            Direction::Top => Direction::Right,
+            Direction::Right => Direction::Bottom,
+            Direction::Bottom => Direction::Left,
+            Direction::Left => Direction::Top,
+        }
+    }
+
+    pub const fn turn_left(self) -> Self {
+        match self {
+            Direction::Top => Direction::Left,
+            Direction::Left => Direction::Bottom,
+            Direction::Bottom => Direction::Right,
+            Direction::Right => Direction::Top,
+        }
+    }
 }
