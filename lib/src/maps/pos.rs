@@ -2,7 +2,7 @@ use std::ops::{Add, AddAssign};
 
 use super::prelude::{Map, Offset};
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Default, Hash)]
 pub struct Pos {
     pub x: usize,
     pub y: usize,

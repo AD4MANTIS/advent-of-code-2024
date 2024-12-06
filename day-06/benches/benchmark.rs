@@ -1,1 +1,1 @@
-lib::bench_part!(day_06::part1::main);
+lib::bench_part!(day_06::part2::main, 10);

@@ -1,11 +1,24 @@
+use std::hash::Hash;
+
 use super::prelude::Offset;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Direction {
     Top,
     Left,
     Right,
     Bottom,
+}
+impl Hash for Direction {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        (match self {
+            Direction::Top => 1,
+            Direction::Left => 2,
+            Direction::Right => 3,
+            Direction::Bottom => 4,
+        })
+        .hash(state);
+    }
 }
 
 impl Direction {
