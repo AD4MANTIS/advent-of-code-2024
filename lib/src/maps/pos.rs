@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign};
+use std::ops::{Add, AddAssign, Sub};
 
 use super::prelude::{Map, Offset};
 
@@ -52,6 +52,25 @@ impl AddAssign for Pos {
     }
 }
 
+impl Sub for Pos {
+    type Output = Offset;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        &self - &rhs
+    }
+}
+
+impl Sub for &Pos {
+    type Output = Offset;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Offset {
+            x: self.x as isize - rhs.x as isize,
+            y: self.y as isize - rhs.y as isize,
+        }
+    }
+}
+
 #[cfg(test)]
 mod position_tests {
     use super::*;
@@ -74,6 +93,14 @@ mod position_tests {
         pos1 += pos2;
 
         assert_eq!(pos1, Pos { x: 4, y: 6 });
+    }
+
+    #[test]
+    fn test_pos_sub() {
+        let pos1 = Pos { x: 10, y: 5 };
+        let pos2 = Pos { x: 2, y: 12 };
+
+        assert_eq!(pos1 - pos2, Offset { x: 8, y: -7 });
     }
 
     #[test]
