@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use lib::ToVec;
 
 lib::day!(09, part2, example => 2858, answer => 6_321_896_265_143);
@@ -62,9 +64,10 @@ fn fill_gaps_from_right_to_left(decompressed_disc: &mut Vec<Block>) {
     while drained_from > 0 {
         drained_from -= 1;
 
-        while decompressed_disc
-            .get(drained_from)
-            .map_or(false, |x| x.file_id.is_none())
+        while drained_from > 0
+            && decompressed_disc
+                .get(drained_from)
+                .map_or(false, |x| x.file_id.is_none())
         {
             drained_from -= 1;
         }
@@ -73,23 +76,24 @@ fn fill_gaps_from_right_to_left(decompressed_disc: &mut Vec<Block>) {
             continue;
         };
 
-        let mut filled_up_to = 0;
-        while decompressed_disc.get(filled_up_to).map_or(false, |block| {
-            block.file_id.is_some() || block.size < block_to_move.size
-        }) {
-            filled_up_to += 1;
-        }
-
-        let Some(free_block) = decompressed_disc.get(filled_up_to) else {
+        let Some(filled_up_to) = decompressed_disc[0..drained_from]
+            .iter()
+            .position(|x| x.file_id.is_none() && x.size >= block_to_move.size)
+        else {
             continue;
         };
 
         if filled_up_to >= drained_from {
             continue;
         }
+
+        let Some(free_block) = decompressed_disc.get(filled_up_to) else {
+            unreachable!();
+        };
+
         match free_block.size.cmp(&block_to_move.size) {
-            std::cmp::Ordering::Equal => decompressed_disc.swap(filled_up_to, drained_from),
-            std::cmp::Ordering::Greater => {
+            Ordering::Equal => decompressed_disc.swap(filled_up_to, drained_from),
+            Ordering::Greater => {
                 let space_left_in_free_block = free_block.size - block_to_move.size;
                 decompressed_disc[filled_up_to].size = block_to_move.size;
                 decompressed_disc.swap(filled_up_to, drained_from);
@@ -102,8 +106,8 @@ fn fill_gaps_from_right_to_left(decompressed_disc: &mut Vec<Block>) {
                 );
                 drained_from += 1;
             }
-            std::cmp::Ordering::Less => {
-                continue;
+            Ordering::Less => {
+                unreachable!();
             }
         }
 
