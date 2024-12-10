@@ -31,6 +31,15 @@ impl Direction {
         }
     }
 
+    pub const fn all_directions() -> [Direction; 4] {
+        [
+            Direction::Top,
+            Direction::Left,
+            Direction::Bottom,
+            Direction::Right,
+        ]
+    }
+
     pub fn all_directions_with_diagonals() -> [Offset; 8] {
         [
             Self::Left.to_offset(),

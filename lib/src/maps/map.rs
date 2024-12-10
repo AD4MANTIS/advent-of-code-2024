@@ -1,7 +1,7 @@
 use std::{
     convert::Infallible,
     fmt::{Debug, Display},
-    ops::Index,
+    ops::{Index, IndexMut},
     str::FromStr,
 };
 
@@ -18,6 +18,12 @@ impl<T> Index<&Pos> for Map<T> {
     #[inline(always)]
     fn index(&self, pos: &Pos) -> &Self::Output {
         &self.rows[pos.y][pos.x]
+    }
+}
+
+impl<T> IndexMut<&Pos> for Map<T> {
+    fn index_mut(&mut self, pos: &Pos) -> &mut Self::Output {
+        &mut self.rows[pos.y][pos.x]
     }
 }
 
