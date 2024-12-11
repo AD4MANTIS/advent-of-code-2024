@@ -66,7 +66,7 @@ macro_rules! day_test {
     (
         $day: literal,
         $part: expr,
-        $($name: ident $($raw: ident)?$(($test_file: literal))? => $result: literal),+
+        $($name: ident $($raw: ident)?$(($test_file: literal))? => $result: literal),*
     ) => {
         #[cfg(test)]
         $crate::paste::item! {
@@ -81,7 +81,7 @@ macro_rules! day_test {
                         let result = $part($crate::get_input_file!($name $($raw)?$( $test_file)?));
                         assert_eq!(result, $result);
                     }
-                )+
+                )*
             }
         }
     };
