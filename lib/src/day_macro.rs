@@ -75,7 +75,7 @@ macro_rules! day_test {
 
                 $(
                     #[test]
-                    fn [< day_ $day _ $name _works >]() {
+                    fn [< $name _works >]() {
                         let _timer = lib::PrintTimer::new("");
 
                         let result = $part($crate::get_input_file!($name $($raw)?$( $test_file)?));
