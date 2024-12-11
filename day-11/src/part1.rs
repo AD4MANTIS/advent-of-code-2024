@@ -1,6 +1,6 @@
 use lib::ToVec;
 
-lib::day!(11, part1, example => 55312, answer => 217443);
+lib::day!(11, part1, example => 55312, answer => 217_443);
 
 type Stone = usize;
 fn part1(input: &str) -> usize {
