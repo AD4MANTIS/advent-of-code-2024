@@ -68,40 +68,46 @@ impl<T> Map<T> {
 }
 
 impl<T: Eq> Map<T> {
-    pub fn get_all_continues_areas(&self) -> Vec<HashSet<Pos>> {
-        let mut areas = Vec::<HashSet<Pos>>::new();
+    pub fn get_all_continues_areas(&self) -> Vec<Vec<Pos>> {
+        let mut areas = Vec::<Vec<Pos>>::new();
+        let mut all_visited_pos = HashSet::<Pos>::with_capacity(self.width() * self.height());
 
         for pos in self.all_pos_iter() {
-            if areas.iter().any(|area| area.contains(&pos)) {
+            if all_visited_pos.contains(&pos) {
                 continue;
             }
 
-            areas.push(self.get_continuas_area(&pos));
+            let mut positions_in_area = Vec::new();
+            self._get_continuas_areas(pos, &mut all_visited_pos, &mut positions_in_area);
+
+            all_visited_pos.extend(positions_in_area.clone());
+            areas.push(positions_in_area);
         }
 
         areas
     }
 
-    pub fn get_continuas_area(&self, start_pos: &Pos) -> HashSet<Pos> {
-        let mut hash_set = HashSet::new();
-        self._get_continuas_area(start_pos, &mut hash_set);
-        hash_set
-    }
-
-    fn _get_continuas_area(&self, start_pos: &Pos, positions_in_area: &mut HashSet<Pos>) {
-        if !positions_in_area.insert(start_pos.clone()) {
+    fn _get_continuas_areas(
+        &self,
+        start_pos: Pos,
+        visited_pos: &mut HashSet<Pos>,
+        positions_in_area: &mut Vec<Pos>,
+    ) {
+        if !visited_pos.insert(start_pos.clone()) {
             return;
         }
 
-        let item = &self[start_pos];
+        let item = &self[&start_pos];
 
         for direction in Direction::all_directions() {
             if let Some(next_pos) = start_pos.try_add(&direction.to_offset()) {
                 if self.get(&next_pos) == Some(item) {
-                    self._get_continuas_area(&next_pos, positions_in_area);
+                    self._get_continuas_areas(next_pos, visited_pos, positions_in_area);
                 }
             }
         }
+
+        positions_in_area.push(start_pos);
     }
 }
 

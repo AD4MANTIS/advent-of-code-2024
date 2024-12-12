@@ -1,4 +1,7 @@
-use lib::maps::prelude::{Direction, Map, Pos};
+use lib::maps::{
+    offset::Offset,
+    prelude::{Direction, Map, Pos},
+};
 
 lib::day!(12, part1,
     example_1 raw(r"AAAA
@@ -18,21 +21,22 @@ fn part1(input: &str) -> usize {
 
     map.get_all_continues_areas()
         .into_iter()
-        .map(|area| calc_perimeter(area.iter(), &map) * area.len())
+        .map(|area| area.len() * calc_perimeter(area.into_iter(), &map))
         .sum()
 }
 
-fn calc_perimeter<'a>(area: impl Iterator<Item = &'a Pos>, map: &Map) -> usize {
-    area.map(|pos| {
-        let plant_type = map[pos];
+fn calc_perimeter(area: impl Iterator<Item = Pos>, map: &Map) -> usize {
+    let directions: [Offset; 4] = Direction::all_directions().map(Direction::to_offset);
 
-        Direction::all_directions()
-            .into_iter()
+    area.map(|pos| {
+        let plant_type = map[&pos];
+
+        directions
+            .iter()
             .filter(|direction| {
-                pos.try_add(&direction.to_offset())
+                pos.try_add(direction)
                     .and_then(|neigbour| map.get(&neigbour))
-                    .copied()
-                    != Some(plant_type)
+                    != Some(&plant_type)
             })
             .count()
     })
