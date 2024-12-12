@@ -1,11 +1,12 @@
 use std::{
+    collections::HashSet,
     convert::Infallible,
     fmt::{Debug, Display},
     ops::{Index, IndexMut},
     str::FromStr,
 };
 
-use super::prelude::{Offset, Pos};
+use super::prelude::{Direction, Offset, Pos};
 
 #[derive(Clone, PartialEq, Eq)]
 pub struct Map<T = char> {
@@ -66,6 +67,44 @@ impl<T> Map<T> {
     }
 }
 
+impl<T: Eq> Map<T> {
+    pub fn get_all_continues_areas(&self) -> Vec<HashSet<Pos>> {
+        let mut areas = Vec::<HashSet<Pos>>::new();
+
+        for pos in self.all_pos_iter() {
+            if areas.iter().any(|area| area.contains(&pos)) {
+                continue;
+            }
+
+            areas.push(self.get_continuas_area(&pos));
+        }
+
+        areas
+    }
+
+    pub fn get_continuas_area(&self, start_pos: &Pos) -> HashSet<Pos> {
+        let mut hash_set = HashSet::new();
+        self._get_continuas_area(start_pos, &mut hash_set);
+        hash_set
+    }
+
+    fn _get_continuas_area(&self, start_pos: &Pos, positions_in_area: &mut HashSet<Pos>) {
+        if !positions_in_area.insert(start_pos.clone()) {
+            return;
+        }
+
+        let item = &self[start_pos];
+
+        for direction in Direction::all_directions() {
+            if let Some(next_pos) = start_pos.try_add(&direction.to_offset()) {
+                if self.get(&next_pos) == Some(item) {
+                    self._get_continuas_area(&next_pos, positions_in_area);
+                }
+            }
+        }
+    }
+}
+
 impl<T: Clone> Map<T> {
     pub fn swap(&mut self, pos1: &Pos, pos2: &Pos) {
         let Some(val1) = self.get(pos1).cloned() else {
@@ -80,7 +119,9 @@ impl<T: Clone> Map<T> {
 
         *self.get_mut(pos2).unwrap() = val1;
     }
+}
 
+impl<T> Map<T> {
     pub const fn columns(&self) -> ColumnsIter<T> {
         ColumnsIter(self, 0)
     }
