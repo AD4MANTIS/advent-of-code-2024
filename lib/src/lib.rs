@@ -1,5 +1,6 @@
 pub extern crate paste;
 pub mod bench_macro;
+pub mod combinations;
 pub mod day_macro;
 pub mod maps;
 mod print_timer;

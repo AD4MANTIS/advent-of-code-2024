@@ -9,6 +9,10 @@ pub struct Pos {
 }
 
 impl Pos {
+    pub fn new(x: usize, y: usize) -> Self {
+        Self { x, y }
+    }
+
     pub fn try_add(&self, rhs: &Offset) -> Option<Self> {
         Some(Self {
             x: self.x.checked_add_signed(rhs.x)?,

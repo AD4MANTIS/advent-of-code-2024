@@ -3,9 +3,9 @@ use lib::{
     ToVec,
 };
 
-lib::day!(10, part1, example => 81, answer => 1324);
+lib::day!(10, part2, example => 81, answer => 1324);
 
-fn part1(input: &str) -> usize {
+fn part2(input: &str) -> usize {
     let mut map: Map<u8> = Map::from(input);
     // Because the u8 parses as the char value we need to subtraction the value of '0'
     for pos in map.all_pos() {

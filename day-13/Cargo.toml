@@ -10,3 +10,5 @@ workspace = true
 
 [dependencies]
 lib = { path = "../lib/" }
+itertools.workspace = true
+thiserror.workspace = true
