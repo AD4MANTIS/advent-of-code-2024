@@ -13,6 +13,14 @@ pub struct Map<T = char> {
     pub rows: Vec<Vec<T>>,
 }
 
+impl<T: Copy> Map<T> {
+    pub fn new(widht: usize, height: usize, default: T) -> Self {
+        Self {
+            rows: (0..height).map(|_| [default].repeat(widht)).collect(),
+        }
+    }
+}
+
 impl<T> Index<&Pos> for Map<T> {
     type Output = T;
 
