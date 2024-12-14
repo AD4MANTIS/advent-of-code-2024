@@ -15,9 +15,7 @@ fn part1(input: &str) -> usize {
         .try_collect()
         .unwrap();
 
-    let all_combinations = get_all_combinations(100)
-        .sorted_by_key(|comb| comb.iter().map(|button| button.get_cost()).sum::<usize>())
-        .collect_vec();
+    let all_combinations = get_all_combinations(100).collect_vec();
 
     machines
         .iter_mut()
