@@ -7,40 +7,39 @@ use thiserror::Error;
 lib::day!(13, part1, example => 480, answer => 29388);
 
 fn part1(input: &str) -> usize {
-    let mut machines = input
+    let mut machines: Vec<_> = input
         .lines()
         .filter(|line| !line.is_empty())
         .tuples::<(_, _, _)>()
-        .map(|machine| Machine::try_from((machine.0, machine.1, machine.2)))
-        .collect::<Result<Vec<Machine>, _>>()
+        .map(Machine::try_from)
+        .try_collect()
         .unwrap();
 
-    let all_combinations = get_all_combinations(100).collect_vec();
+    let all_combinations = get_all_combinations(100)
+        .sorted_by_key(|comb| comb.iter().map(|button| button.get_cost()).sum::<usize>())
+        .collect_vec();
 
     machines
         .iter_mut()
         .filter_map(|machine| {
-            all_combinations
-                .iter()
-                .filter_map(|combination| {
-                    let mut current_pos = Pos::new(0, 0);
-                    let mut cost = 0;
+            all_combinations.iter().find_map(|combination| {
+                let mut current_pos = Pos::new(0, 0);
+                let mut cost = 0;
 
-                    for button in combination {
-                        current_pos = current_pos
-                            .try_add(machine.get_button(*button))
-                            .expect("Should only be positive an not overflow");
+                for button in combination {
+                    current_pos = current_pos
+                        .try_add(machine.get_button(*button))
+                        .expect("Should only be positive an not overflow");
 
-                        cost += button.get_cost();
+                    cost += button.get_cost();
 
-                        if current_pos == machine.price {
-                            return Some(cost);
-                        }
+                    if current_pos == machine.price {
+                        return Some(cost);
                     }
+                }
 
-                    None
-                })
-                .min()
+                None
+            })
         })
         .sum()
 }
