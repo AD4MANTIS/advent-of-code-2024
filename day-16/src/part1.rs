@@ -20,7 +20,7 @@ lib::day!(16, part1, example => 7036, example_2 raw(r"#################
 #S#.............#
 #################") => 11048);
 
-const MAX_SCORE = 300_000
+const MAX_SCORE: usize = 300_000;
 
 #[derive(Clone, PartialEq, Eq)]
 struct ReindeerPos {
@@ -59,15 +59,15 @@ fn iterate<'a>(
     map: &'a Map,
     iter: NextPositionsIterator<'a>,
 ) -> impl Iterator<Item = usize> + use<'a> {
-    iter.into_iter()
-    .filter(|x| x.score <= MAX_SCORE)
-        .flat_map(|reindeer| -> Box<dyn Iterator<Item = usize> + '_> {
+    iter.into_iter().filter(|x| x.score <= MAX_SCORE).flat_map(
+        |reindeer| -> Box<dyn Iterator<Item = usize> + '_> {
             if map[&reindeer.pos] == 'E' {
                 return Box::new(std::iter::once(reindeer.score));
             }
 
             Box::new(iterate(map, NextPositionsIterator::new(map, reindeer)))
-        })
+        },
+    )
 }
 
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
