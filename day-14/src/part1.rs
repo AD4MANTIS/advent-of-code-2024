@@ -3,7 +3,7 @@ use std::{num::ParseIntError, str::FromStr};
 use lib::maps::offset::Offset;
 
 lib::day_test!(14, part1_example, example => 12);
-lib::day_test!(14, part1_answer, answer => 230172768);
+lib::day_test!(14, part1_answer, answer => 230_172_768);
 
 #[allow(dead_code)]
 fn part1_example(input: &str) -> usize {
