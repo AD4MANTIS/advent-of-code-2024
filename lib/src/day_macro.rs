@@ -66,7 +66,7 @@ macro_rules! day_test {
     (
         $day: literal,
         $part: expr,
-        $($name: ident $($raw: ident)?$(($test_file: literal))? => $result: literal),*
+        $($name: ident $($raw: ident)?$(($test_file: literal))? => $result: expr),*
     ) => {
         #[cfg(test)]
         $crate::paste::item! {

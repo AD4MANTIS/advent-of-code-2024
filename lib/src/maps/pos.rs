@@ -15,7 +15,7 @@ impl std::fmt::Debug for Pos {
 }
 
 impl Pos {
-    pub fn new(x: usize, y: usize) -> Self {
+    pub const fn new(x: usize, y: usize) -> Self {
         Self { x, y }
     }
 
