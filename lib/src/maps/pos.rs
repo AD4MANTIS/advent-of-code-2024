@@ -2,10 +2,16 @@ use std::ops::{Add, AddAssign, Sub};
 
 use super::prelude::{Map, Offset};
 
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Default, Hash)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Default, Hash)]
 pub struct Pos {
     pub x: usize,
     pub y: usize,
+}
+
+impl std::fmt::Debug for Pos {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_tuple("Pos").field(&self.x).field(&self.y).finish()
+    }
 }
 
 impl Pos {
