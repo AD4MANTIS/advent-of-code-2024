@@ -5,9 +5,7 @@ use lib::ToVec;
 lib::day!(19, part1, example => 6, answer => 300);
 
 fn part1(input: &str) -> usize {
-    let mut towels = input.lines().next().unwrap().split(", ").to_vec();
-    towels.sort_by_key(|t| t.len());
-    towels.reverse();
+    let towels = input.lines().next().unwrap().split(", ").to_vec();
 
     let designs = input
         .lines()
