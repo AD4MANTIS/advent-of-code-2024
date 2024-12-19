@@ -2,7 +2,7 @@ lib::day!(17, part2, example raw(r"Register A: 2024
 Register B: 0
 Register C: 0
 
-Program: 0,3,5,4,3,0") => 117_440, answer => 0);
+Program: 0,3,5,4,3,0") => 117_440);
 
 #[allow(non_camel_case_types)]
 enum Instruction {
