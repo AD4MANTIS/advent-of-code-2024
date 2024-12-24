@@ -10,7 +10,7 @@ pub struct Pos {
 
 impl std::fmt::Debug for Pos {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_tuple("Pos").field(&self.x).field(&self.y).finish()
+        f.write_fmt(format_args!("Pos({}, {})", self.x, self.y))
     }
 }
 
