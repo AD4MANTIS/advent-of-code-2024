@@ -1,29 +1,30 @@
-use std::collections::HashMap;
-
 use lib::maps::prelude::{Direction, Map, Pos};
 
-lib::day!(20, part1, example => 0, answer => 1286);
+lib::day!(20, part2, example => 0, answer => 989_316);
 
-fn part1(input: &str) -> usize {
+fn part2(input: &str) -> usize {
     let map = Map::from(input);
 
     let start = map
         .all_pos_iter()
         .find(|pos| map[pos] == 'S')
         .expect("Should have Start");
+
     let route = get_normal_route(&map, start);
 
     route
-        .values()
+        .iter()
         .flat_map(|route_pos| {
-            let RoutePos { distance, pos } = route_pos;
+            let distance = route_pos.distance;
 
-            get_jumps_from_pos(&map, &route_pos.pos)
-                .filter_map(|cheated_pos| route.get(&cheated_pos))
-                .filter(move |cheated_pos| cheated_pos.distance > *distance)
-                .map(move |cheated_pos| {
-                    cheated_pos.distance - distance - (&cheated_pos.pos - pos).abs_distance()
-                })
+            get_jumps_from_pos(&route, &route_pos.pos).filter_map(
+                move |(cheated_pos, cheat_duration)| {
+                    cheated_pos
+                        .distance
+                        .checked_sub(distance)
+                        .map(|x| x - cheat_duration)
+                },
+            )
         })
         .filter(|picosecond_saved| *picosecond_saved >= 100)
         .count()
@@ -35,7 +36,7 @@ struct RoutePos {
     distance: usize,
 }
 
-fn get_normal_route(map: &Map, start: Pos) -> HashMap<Pos, RoutePos> {
+fn get_normal_route(map: &Map, start: Pos) -> Vec<RoutePos> {
     let mut route = Vec::<RoutePos>::with_capacity(map.height() * map.width() / 2);
     route.push(RoutePos {
         distance: 0,
@@ -74,22 +75,20 @@ fn get_normal_route(map: &Map, start: Pos) -> HashMap<Pos, RoutePos> {
         current_pos = route.last().unwrap();
     }
 
-    route.into_iter().map(|x| (x.pos.clone(), x)).collect()
+    route
 }
 
-fn get_jumps_from_pos<'a>(map: &'a Map, start: &'a Pos) -> impl Iterator<Item = Pos> + use<'a> {
-    Direction::all_directions()
-        .map(Direction::to_offset)
-        .into_iter()
-        .filter_map(|direction| {
-            let cheat = start.try_add(&direction)?;
+fn get_jumps_from_pos<'a>(
+    map: &'a [RoutePos],
+    start: &'a Pos,
+) -> impl Iterator<Item = (&'a RoutePos, usize)> {
+    map.iter().filter_map(|route_pos| {
+        let distance = (&route_pos.pos - start).abs_distance();
 
-            let cheat_2 = cheat.try_add(&direction)?;
+        if distance > 20 {
+            return None;
+        }
 
-            if map[&cheat] != '#' || map.get(&cheat_2).map_or(true, |x| *x == '#') {
-                return None;
-            }
-
-            Some(cheat_2)
-        })
+        Some((route_pos, distance))
+    })
 }

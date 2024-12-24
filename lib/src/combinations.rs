@@ -15,14 +15,14 @@ impl<T: Copy + Eq> Iterator for CombinationsIterator<T> {
             return self.last_combination.clone();
         };
 
-        let last = self.options.last().unwrap();
+        let last = self.options[self.options.len() - 1];
 
-        if last_combination.iter().all(|x| *x == *last) {
+        if last_combination.iter().all(|x| *x == last) {
             return None;
         }
 
         for item in last_combination.iter_mut().rev() {
-            if item == last {
+            if *item == last {
                 *item = self.options[0];
             } else {
                 *item = self.options[self

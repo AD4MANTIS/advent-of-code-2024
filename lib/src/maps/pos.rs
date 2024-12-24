@@ -48,6 +48,14 @@ impl Add for Pos {
     type Output = Self;
 
     fn add(self, rhs: Self) -> Self::Output {
+        &self + &rhs
+    }
+}
+
+impl Add for &Pos {
+    type Output = Pos;
+
+    fn add(self, rhs: Self) -> Self::Output {
         Self::Output {
             x: self.x + rhs.x,
             y: self.y + rhs.y,

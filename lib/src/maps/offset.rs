@@ -29,6 +29,10 @@ impl Offset {
     pub const fn y(y: isize) -> Self {
         Self { x: 0, y }
     }
+
+    pub const fn abs_distance(&self) -> usize {
+        self.x.unsigned_abs() + self.y.unsigned_abs()
+    }
 }
 
 impl Neg for Offset {
