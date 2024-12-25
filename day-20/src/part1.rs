@@ -49,20 +49,10 @@ fn get_normal_route(map: &Map, start: Pos) -> HashMap<Pos, RoutePos> {
     while map[&current_pos.pos] != 'E' {
         let next_pos = offsets
             .iter()
-            .find_map(|direction| {
-                current_pos
-                    .pos
-                    .try_add(direction)
-                    .and_then(|next_pos| match map.get(&next_pos) {
-                        None | Some('#') => None,
-                        _ => Some(next_pos),
-                    })
-                    .filter(|next_pos| {
-                        route.len() == 1
-                            || route
-                                .get(route.len() - 2)
-                                .map_or(true, |pos| &pos.pos != next_pos)
-                    })
+            .filter_map(|direction| current_pos.pos.try_add(direction))
+            .find(|next_pos| match map.get(next_pos) {
+                Some('#') => false,
+                _ => route.len() == 1 || &route[route.len() - 2].pos != next_pos,
             })
             .expect("Should be a valid route");
 

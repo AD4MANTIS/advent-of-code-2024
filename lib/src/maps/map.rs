@@ -151,6 +151,13 @@ impl<T> Map<T> {
     pub const fn all_pos_iter(&self) -> AllPosIter<T> {
         AllPosIter(self, None)
     }
+
+    pub fn enumerate_all_pos(&self) -> impl Iterator<Item = (Pos, &T)> {
+        self.all_pos_iter().map(|pos| {
+            let item = &self[&pos];
+            (pos, item)
+        })
+    }
 }
 
 pub struct AllPosIter<'a, T>(&'a Map<T>, Option<Pos>);

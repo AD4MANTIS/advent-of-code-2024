@@ -14,18 +14,7 @@ fn part2(input: &str) -> usize {
 
     route
         .iter()
-        .flat_map(|route_pos| {
-            let distance = route_pos.distance;
-
-            get_jumps_from_pos(&route, &route_pos.pos).filter_map(
-                move |(cheated_pos, cheat_duration)| {
-                    cheated_pos
-                        .distance
-                        .checked_sub(distance)
-                        .map(|x| x - cheat_duration)
-                },
-            )
-        })
+        .flat_map(|route_pos| get_time_saved_for_jumps_from_pos(&route, route_pos))
         .filter(|picosecond_saved| *picosecond_saved >= 100)
         .count()
 }
@@ -50,20 +39,10 @@ fn get_normal_route(map: &Map, start: Pos) -> Vec<RoutePos> {
     while map[&current_pos.pos] != 'E' {
         let next_pos = offsets
             .iter()
-            .find_map(|direction| {
-                current_pos
-                    .pos
-                    .try_add(direction)
-                    .and_then(|next_pos| match map.get(&next_pos) {
-                        None | Some('#') => None,
-                        _ => Some(next_pos),
-                    })
-                    .filter(|next_pos| {
-                        route.len() == 1
-                            || route
-                                .get(route.len() - 2)
-                                .map_or(true, |pos| &pos.pos != next_pos)
-                    })
+            .filter_map(|direction| current_pos.pos.try_add(direction))
+            .find(|next_pos| match map.get(next_pos) {
+                Some('#') => false,
+                _ => route.len() == 1 || &route[route.len() - 2].pos != next_pos,
             })
             .expect("Should be a valid route");
 
@@ -78,17 +57,19 @@ fn get_normal_route(map: &Map, start: Pos) -> Vec<RoutePos> {
     route
 }
 
-fn get_jumps_from_pos<'a>(
+fn get_time_saved_for_jumps_from_pos<'a>(
     map: &'a [RoutePos],
-    start: &'a Pos,
-) -> impl Iterator<Item = (&'a RoutePos, usize)> {
-    map.iter().filter_map(|route_pos| {
-        let distance = (&route_pos.pos - start).abs_distance();
+    start: &'a RoutePos,
+) -> impl Iterator<Item = usize> + use<'a> {
+    map.iter().filter_map(|cheated_route_pos| {
+        let cheated_distance = cheated_route_pos.distance.checked_sub(start.distance)?;
 
-        if distance > 20 {
+        let cheat_distance = (&cheated_route_pos.pos - &start.pos).abs_distance();
+
+        if cheat_distance > 20 {
             return None;
         }
 
-        Some((route_pos, distance))
+        cheated_distance.checked_sub(cheat_distance)
     })
 }
