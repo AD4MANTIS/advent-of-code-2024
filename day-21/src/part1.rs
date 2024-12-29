@@ -1,13 +1,21 @@
-use std::iter::repeat_n;
+use std::{collections::HashMap, iter::repeat_n};
+
+use lib::ToVec;
 
 lib::day!(21, part1, example => 126384, answer => 242484);
 
 fn part1(input: &str) -> usize {
+    calc(input, 2)
+}
+
+pub fn calc(input: &str, depth: usize) -> usize {
+    let mut cache = Cache::with_capacity(1000);
+
     input
         .lines()
         .map(|line| {
             let code = line.chars().filter_map(|c| NumericKeypad::try_from(c).ok());
-            let shortes_sequence = find_shortes_sequence_len(code, 2);
+            let shortes_sequence = find_shortes_sequence_len(code, depth, &mut cache);
 
             let code_num = line[..3].parse::<usize>().unwrap();
 
@@ -28,7 +36,7 @@ fn part1(input: &str) -> usize {
     +---+---+
 */
 #[derive(Clone, Copy, Debug)]
-enum NumericKeypad {
+pub enum NumericKeypad {
     Num(u8),
     Activate,
 }
@@ -94,7 +102,7 @@ impl TryFrom<char> for NumericKeypad {
 +---+---+---+
 */
 #[derive(Clone, Copy)]
-enum DirectionalKeypad {
+pub enum DirectionalKeypad {
     Left,
     Right,
     Up,
@@ -160,7 +168,7 @@ impl TryFrom<char> for DirectionalKeypad {
     }
 }
 
-trait Keypad: Copy + Default + TryFrom<char, Error = ()> {
+pub trait Keypad: Copy + Default + TryFrom<char, Error = ()> + std::fmt::Debug {
     fn row(self) -> u8;
     fn col(self) -> u8;
     fn can_make_row_movement_first(self, to: Self) -> bool;
@@ -197,28 +205,47 @@ trait Keypad: Copy + Default + TryFrom<char, Error = ()> {
 }
 
 #[derive(Default)]
-struct Robot<T: Keypad> {
+pub struct Robot<T: Keypad> {
     pub position: T,
 }
 
-fn find_shortes_sequence_len<T: Keypad>(code: impl Iterator<Item = T>, depth: usize) -> usize {
+type Cache = HashMap<(String, usize), usize>;
+
+fn find_shortes_sequence_len<T: Keypad>(
+    code: impl Iterator<Item = T>,
+    depth: usize,
+    cache: &mut Cache,
+) -> usize {
     let mut robot = Robot::<T>::default();
 
-    code.flat_map(|c| {
-        let complexity = robot
-            .position
-            .input_sequence_to(c)
-            .map(|seq| {
-                if depth == 0 {
-                    seq.count()
-                } else {
-                    find_shortes_sequence_len(seq, depth - 1)
-                }
-            })
-            .min();
+    let code = code.to_vec();
 
-        robot.position = c;
-        complexity
-    })
-    .sum()
+    let code_key = (format!("{code:?}"), depth);
+    if let Some(cached_result) = cache.get(&code_key) {
+        return *cached_result;
+    }
+
+    let sum = code
+        .into_iter()
+        .flat_map(|c| {
+            let complexity = robot
+                .position
+                .input_sequence_to(c)
+                .map(|seq| {
+                    if depth == 0 {
+                        seq.count()
+                    } else {
+                        find_shortes_sequence_len(seq, depth - 1, cache)
+                    }
+                })
+                .min();
+
+            robot.position = c;
+            complexity
+        })
+        .sum();
+
+    cache.insert(code_key, sum);
+
+    sum
 }
