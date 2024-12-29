@@ -1,6 +1,6 @@
 use std::usize;
 
-lib::day!(22, part1, example => 37327623, answer => 0);
+lib::day!(22, part1, example => 37327623, answer => 17262627539);
 
 fn part1(input: &str) -> usize {
     input
@@ -16,7 +16,7 @@ fn part1(input: &str) -> usize {
         .sum()
 }
 
-fn calc_next_secret(mut secret: usize) -> usize {
+pub const fn calc_next_secret(mut secret: usize) -> usize {
     secret = mix(secret * 64, secret);
     secret = prune(secret);
     secret = mix(secret / 32, secret);

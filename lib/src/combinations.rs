@@ -101,4 +101,9 @@ mod test {
             ]
         )
     }
+
+    #[test]
+    fn _18_options_4_combinations() {
+        for _ in (-9..=9).combinations(4) {}
+    }
 }
